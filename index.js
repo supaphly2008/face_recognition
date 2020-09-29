@@ -28,6 +28,7 @@ video.addEventListener("play", () => {
   // on the streaming video screen
   const displaySize = { width: video.width, height: video.height };
   faceapi.matchDimensions(canvas, displaySize);
+  const drawOptions;
   setInterval(async () => {
     const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceExpressions().withAgeAndGender();
     console.log(detections);
@@ -37,10 +38,14 @@ video.addEventListener("play", () => {
     faceapi.draw.drawDetections(canvas, resizedDetections);
     faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
     faceapi.draw.drawFaceExpressions(canvas, resizedDetections);
-    // resizedDetections.forEach((detection) => {
-    //   const box = detection.detection.box;
-    //   const drawBox = new faceapi.draw.DrawBox(box, { label: Math.round(detection.age) + " year old " + detection.gender });
-    //   drawBox.draw(canvas);
-    // });
+    
+    resizedDetections.forEach((detection) => {
+      const box = detection.detection.box;
+      drawOptions = {
+        label: Math.round(detection.age) + " year old " + detection.gender
+      }
+      const drawBox = new faceapi.draw.DrawBox(box, drawOptions);
+      drawBox.draw(canvas);
+    });
   }, 100);
 });
