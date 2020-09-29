@@ -1,0 +1,16 @@
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+  height: 100vh;
+}
+
+#video {
+  background-color: lightgray;
+}
+
+canvas {
+  position: absolute;
+}
