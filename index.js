@@ -28,22 +28,29 @@ video.addEventListener("play", () => {
   // on the streaming video screen
   const displaySize = { width: video.width, height: video.height };
   faceapi.matchDimensions(canvas, displaySize);
-  const drawOptions;
+
   setInterval(async () => {
-    const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceExpressions().withAgeAndGender();
-    console.log(detections);
+    const detections = await faceapi
+      .detectAllFaces(video, new faceapi.TinyFaceDetectorOptions({ gender: "ate" }))
+      .withFaceLandmarks()
+      .withFaceExpressions()
+      .withAgeAndGender();
+    // console.log(detections);
     const resizedDetections = faceapi.resizeResults(detections, displaySize);
     // clears the canvas
     canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
     faceapi.draw.drawDetections(canvas, resizedDetections);
     faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
     faceapi.draw.drawFaceExpressions(canvas, resizedDetections);
-    
+
+    console.log(detections);
+
     resizedDetections.forEach((detection) => {
       const box = detection.detection.box;
-      drawOptions = {
-        label: Math.round(detection.age) + " year old " + detection.gender
-      }
+      const drawOptions = {
+        label: Math.round(detection.age) + " year old " + detection.gender,
+        boxColor: "red",
+      };
       const drawBox = new faceapi.draw.DrawBox(box, drawOptions);
       drawBox.draw(canvas);
     });
